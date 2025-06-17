@@ -1,5 +1,6 @@
-docker build -t mcp/postgres-debug .
-docker run -it --rm \
-  --name mcp_debug \
-  -p 8900:3000 \
-  mcp/postgres-debug
+docker build -t local/mcp-client .
+
+docker run --rm -it \
+  --network host \
+  local/mcp-client \
+  sse http://localhost:8900 --input "SELECT NOW();"

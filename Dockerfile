@@ -1,9 +1,12 @@
 FROM mcp/postgres:latest
 
-# Install minimal tools using Alpine's package manager
+# For Alpine-based image
 RUN apk add --no-cache bash curl coreutils procps net-tools iputils
 
 WORKDIR /app
 
-# Keep container alive for debugging
-CMD ["sleep", "3600"]
+# Override ENTRYPOINT from base image to allow debugging
+ENTRYPOINT ["/bin/sh"]
+
+# Default to sleeping if no command provided
+CMD ["-c", "sleep 3600"]

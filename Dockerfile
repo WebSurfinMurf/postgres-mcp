@@ -1,6 +1,6 @@
 FROM python:3.13
 
-# Add diagnostics and tools
+# Install useful Linux tools
 RUN apt-get update && apt-get install -y \
     curl \
     net-tools \
@@ -10,7 +10,8 @@ RUN apt-get update && apt-get install -y \
     git \
     ca-certificates
 
-# Install the MCP client
+# Install mcp-client
 RUN pip install --no-cache-dir mcp-client
 
-ENTRYPOINT ["mcp-client"]
+# Use the Python CLI module explicitly
+ENTRYPOINT ["python", "-m", "mcp_client.cli"]

@@ -1,12 +1,8 @@
-FROM mcp/postgres:latest
+# Dockerfile
+FROM python:3.11-slim
 
-# For Alpine-based image
-RUN apk add --no-cache bash curl coreutils procps net-tools iputils
+# Install the MCP client
+RUN pip install --no-cache-dir mcp-client
 
-WORKDIR /app
-
-# Override ENTRYPOINT from base image to allow debugging
-ENTRYPOINT ["/bin/sh"]
-
-# Default to sleeping if no command provided
-CMD ["-c", "sleep 3600"]
+# Default entrypoint lets us pass args (like 'sse http://...')
+ENTRYPOINT ["mcp-client"]

@@ -1,7 +1,17 @@
-FROM python:3.13-rc-slim
+# Use full Debian image
+FROM debian:bookworm
 
-RUN pip install --no-cache-dir mcp-client && \
-    ln -s /root/.local/bin/mcp-client /usr/local/bin/mcp-client || true && \
-    which mcp-client
+# Install common utilities and Python
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    curl \
+    net-tools \
+    iputils-ping \
+    dnsutils \
+    vim \
+    git \
+    && pip3 install --no-cache-dir mcp-client \
+    && ln -s /usr/local/bin/mcp-client /usr/bin/mcp-client
 
 ENTRYPOINT ["mcp-client"]

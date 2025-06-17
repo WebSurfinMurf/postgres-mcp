@@ -1,21 +1,27 @@
-# Use full Debian image
-FROM debian:bookworm
+FROM ubuntu:24.04
 
-# Install common utilities and Python
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Python 3.13 and tools
 RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
+    python3.13 \
+    python3.13-venv \
+    python3.13-distutils \
     curl \
     net-tools \
     iputils-ping \
     dnsutils \
     vim \
-    git
+    git \
+    ca-certificates \
+    && apt-get clean
 
-# Install mcp-client with system override
-RUN pip3 install --break-system-packages --no-cache-dir mcp-client
+# Make Python 3.13 default
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.13 1 && \
+    update-alternatives --install /usr/bin/pip3 pip3 /usr/bin/pip3 1
 
-# Symlink for easier calling
-RUN ln -s /usr/local/bin/mcp-client /usr/bin/mcp-client || true
+# Upgrade pip and install mcp-client
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3 && \
+    pip3 install --no-cache-dir mcp-client
 
 ENTRYPOINT ["mcp-client"]
